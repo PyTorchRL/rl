@@ -3229,33 +3229,24 @@ class BinaryDiscreteTensorSpec(DiscreteTensorSpec):
     """A binary discrete tensor spec.
 
     Args:
-        n (int): length of the binary vector.
         shape (torch.Size, optional): total shape of the sampled tensors.
             If provided, the last dimension must match n.
         device (str, int or torch.device, optional): device of the tensors.
         dtype (str or torch.dtype, optional): dtype of the tensors. Defaults to torch.long.
 
     Examples:
-        >>> spec = BinaryDiscreteTensorSpec(n=4, shape=(5, 4), device="cpu", dtype=torch.bool)
+        >>> spec = BinaryDiscreteTensorSpec(shape=(5, 4), device="cpu", dtype=torch.bool)
         >>> print(spec.zero())
     """
 
     def __init__(
         self,
-        n: int,
         shape: Optional[torch.Size] = None,
         device: Optional[DEVICE_TYPING] = None,
         dtype: Union[str, torch.dtype] = torch.int8,
     ):
         if shape is None or not len(shape):
-            shape = torch.Size((n,))
-        else:
-            shape = torch.Size(shape)
-            if shape[-1] != n:
-                raise ValueError(
-                    f"The last value of the shape must match n for spec {self.__class__}. "
-                    f"Got n={n} and shape={shape}."
-                )
+            shape = torch.Size((1,))
         super().__init__(n=2, shape=shape, device=device, dtype=dtype)
 
     def expand(self, *shape):
